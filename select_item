@@ -7,9 +7,14 @@ document.addEventListener("DOMContentLoaded", function() {
   const prepareShopifyItemsArray = () => {
     window.dataLayer = window.dataLayer || [];
     ShopifyItems.forEach((ShopifyItem, Index) => {
+      var itemName = ShopifyItem.variants[0].name.split(" - ");
+      var itemId = ShopifyItem.variants[0].id;
+      var prodId = ShopifyItem.id;
       ShopifyItemsArray.push({
-        item_id: ShopifyItem.variants[0].id,
-        item_name: ShopifyItem.variants[0].name,
+        item_id: "shopify_US_" + prodId + "_" + itemId,
+        item_name: itemName[0],
+        item_variant: ShopifyItem.variants[0].public_title,
+        item_category: ShopifyItem.type,
         item_brand: ShopifyItem.vendor,
         index: Index + 1,
         price: ShopifyItem.variants[0].price / 100
