@@ -1,0 +1,36 @@
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const productItems = document.querySelectorAll('.product-grid-item');
+  const ShopifyItems = ShopifyAnalytics.meta.products;
+  let ShopifyItemsArray = [];
+  
+  const prepareShopifyItemsArray = () => {
+    window.dataLayer = window.dataLayer || [];
+    ShopifyItems.forEach((ShopifyItem, Index) => {
+      ShopifyItemsArray.push({
+        item_id: ShopifyItem.variants[0].id,
+        item_name: ShopifyItem.variants[0].name,
+        item_brand: ShopifyItem.vendor,
+        index: Index + 1,
+        price: ShopifyItem.variants[0].price / 100
+      });
+    });
+  };
+  
+  prepareShopifyItemsArray();
+  
+  productItems.forEach((productItem, productIndex) => {
+    productItem.addEventListener('click', () => {
+      dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
+      dataLayer.push({
+        event: 'select_item',
+        ecommerce: {
+          item_list_id: {{collection.id | json}},
+          item_list_name: {{collection.title | json}},
+          items: ShopifyItemsArray[productIndex]
+        }
+      });
+    });
+  });
+});
+</script>
